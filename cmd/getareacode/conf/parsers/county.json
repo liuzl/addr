@@ -19,12 +19,12 @@
       {
         "type": "text",
         "key": "code",
-        "xpath": "./td[1]/a"
+        "xpath": "./td[1]"
       },
       {
         "type": "text",
         "key": "name",
-        "xpath": "./td[2]/a"
+        "xpath": "./td[2]"
       }
     ]
   },
