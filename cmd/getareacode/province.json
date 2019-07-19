@@ -13,7 +13,7 @@
     "city": [
       {
         "type": "url",
-        "key": "county",
+        "key": "city",
         "xpath": "./td[1]/a"
       },
       {
@@ -23,7 +23,7 @@
       },
       {
         "type": "text",
-        "key": "code",
+        "key": "name",
         "xpath": "./td[2]/a"
       }
     ]
