@@ -1,39 +1,51 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"fmt"
 
+	"crawler.club/et"
 	"github.com/golang/glog"
-	"zliu.org/goutil"
+	"zliu.org/filestore"
 )
 
 var (
 	start = flag.String("start", "addr", "the parser name for the start url")
+	dir   = flag.String("dir", "data", "the data dir")
 )
 
 func main() {
 	flag.Parse()
 	defer glog.Flush()
 
+	fs, err := filestore.NewFileStore(*dir)
+	if err != nil {
+		glog.Fatal(err)
+	}
+	defer fs.Close()
 	p, err := pool.GetParser(*start, false)
 	if err != nil {
 		glog.Fatal(err)
 	}
-	fmt.Println(p.ExampleUrl)
-	years, _, err := Parse(*start, p.ExampleUrl)
-	if err != nil {
-		glog.Fatal(err)
-	}
-	for _, task := range years {
-		fmt.Println(task.Url)
-		ret, _ := goutil.RegexpParse(task.Url, `\d+`)
-		if len(ret) != 1 {
-			glog.Fatal(task.Url, " error")
+
+	glog.Infof("start crawling from %s", p.ExampleUrl)
+
+	var tasks = []*et.UrlTask{&et.UrlTask{ParserName: *start, Url: p.ExampleUrl}}
+	for {
+		if len(tasks) == 0 {
+			break
 		}
-		year := ret[0]
-		fmt.Println(year)
-		tasks, items, err := Parse(task.ParserName, task.Url)
-		fmt.Println(items, tasks, err)
+		task := tasks[0]
+		tasks = tasks[1:]
+		new_tasks, items, err := ParseTask(task)
+		if err != nil {
+			glog.Error(err)
+			continue
+		}
+		tasks = append(tasks, new_tasks...)
+		for _, item := range items {
+			b, _ := json.Marshal(item)
+			fs.WriteLine(b)
+		}
 	}
 }
