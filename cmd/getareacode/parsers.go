@@ -5,12 +5,10 @@ import (
 	"flag"
 	"io/ioutil"
 	"path/filepath"
-	"strings"
 	"sync"
 
-	"crawler.club/crawler/rss"
+	"crawler.club/dl"
 	"crawler.club/et"
-	"github.com/crawlerclub/ce"
 )
 
 var (
@@ -43,32 +41,20 @@ func (p *Parsers) GetParser(name string, refresh bool) (*et.Parser, error) {
 
 var pool = &Parsers{items: make(map[string]*et.Parser)}
 
-func Parse(task *et.UrlTask, page, ip string) (
+func ParseTask(task *et.UrlTask) (
 	[]*et.UrlTask, []map[string]interface{}, error) {
-	name := task.ParserName
-	url := task.Url
-	switch strings.ToLower(name) {
-	case "rss_":
-		feeds, err := rss.Parse(url, page, task.Ext)
-		return nil, feeds, err
-	case "content_":
-		doc := ce.ParsePro(url, page, ip, false)
-		return nil, []map[string]interface{}{map[string]interface{}{"doc": doc, "ext": task.Ext}}, nil
-	case "link_":
-		links, err := et.ParseNewLinks(page, url)
-		if err != nil {
-			return nil, nil, err
-		}
-		var tasks []*et.UrlTask
-		for _, link := range links {
-			tasks = append(tasks, &et.UrlTask{ParserName: "content_", Url: link, Ext: task.Ext})
-		}
-		return tasks, nil, nil
-	default:
-		p, err := pool.GetParser(name, false)
-		if err != nil {
-			return nil, nil, err
-		}
-		return p.Parse(page, url)
+	return Parse(task.ParserName, task.Url)
+}
+
+func Parse(name, url string) (
+	[]*et.UrlTask, []map[string]interface{}, error) {
+	p, err := pool.GetParser(name, false)
+	if err != nil {
+		return nil, nil, err
 	}
+	ret := dl.DownloadUrl(url)
+	if ret.Error != nil {
+		return nil, nil, ret.Error
+	}
+	return p.Parse(ret.Text, url)
 }
