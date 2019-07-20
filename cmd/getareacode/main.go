@@ -38,6 +38,7 @@ func main() {
 		}
 		task := tasks[0]
 		tasks = tasks[1:]
+		glog.Info(task.Url)
 		new_tasks, items, err := ParseTask(task)
 		if err != nil {
 			glog.Error(err)
