@@ -1,19 +1,27 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/golang/glog"
 	"zliu.org/goutil"
 )
 
+var (
+	start = flag.String("start", "addr", "the parser name for the start url")
+)
+
 func main() {
-	p, err := pool.GetParser("addr", false)
+	flag.Parse()
+	defer glog.Flush()
+
+	p, err := pool.GetParser(*start, false)
 	if err != nil {
 		glog.Fatal(err)
 	}
 	fmt.Println(p.ExampleUrl)
-	years, _, err := Parse("addr", p.ExampleUrl)
+	years, _, err := Parse(*start, p.ExampleUrl)
 	if err != nil {
 		glog.Fatal(err)
 	}
