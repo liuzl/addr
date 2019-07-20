@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"time"
 
 	"crawler.club/et"
 	"github.com/golang/glog"
@@ -47,5 +48,6 @@ func main() {
 			b, _ := json.Marshal(item)
 			fs.WriteLine(b)
 		}
+		time.Sleep(2 * time.Second)
 	}
 }
