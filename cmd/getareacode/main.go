@@ -13,6 +13,7 @@ import (
 var (
 	start = flag.String("start", "addr", "the parser name for the start url")
 	dir   = flag.String("dir", "data", "the data dir")
+	sleep = flag.Int("sleep", -1, "in seconds")
 )
 
 func main() {
@@ -49,6 +50,8 @@ func main() {
 			b, _ := json.Marshal(item)
 			fs.WriteLine(b)
 		}
-		time.Sleep(2 * time.Second)
+		if *sleep > 0 {
+			time.Sleep(time.Duration(*sleep) * time.Second)
+		}
 	}
 }
