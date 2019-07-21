@@ -9,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"zliu.org/ds"
 	"zliu.org/filestore"
+	"zliu.org/goutil"
 )
 
 var (
@@ -39,7 +40,10 @@ func main() {
 	defer q.Close()
 
 	glog.Infof("start crawling from %s", p.ExampleUrl)
-	q.EnqueueObject(&et.UrlTask{ParserName: *start, Url: p.ExampleUrl})
+
+	if goutil.FileGuard("first.lock") {
+		q.EnqueueObject(&et.UrlTask{ParserName: *start, Url: p.ExampleUrl})
+	}
 
 	var task = new(et.UrlTask)
 	for {
