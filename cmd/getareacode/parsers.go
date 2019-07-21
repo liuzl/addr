@@ -52,7 +52,7 @@ func Parse(name, url string) (
 	if err != nil {
 		return nil, nil, err
 	}
-	ret := dl.Download(&dl.HttpRequest{Url: url, Retry: 3})
+	ret := dl.Download(&dl.HttpRequest{Url: url, Retry: 3, Platform: "pc"})
 	if ret.Error != nil {
 		return nil, nil, ret.Error
 	}
