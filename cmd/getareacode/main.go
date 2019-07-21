@@ -7,12 +7,14 @@ import (
 
 	"crawler.club/et"
 	"github.com/golang/glog"
+	"zliu.org/ds"
 	"zliu.org/filestore"
 )
 
 var (
 	start = flag.String("start", "addr", "the parser name for the start url")
 	dir   = flag.String("dir", "data", "the data dir")
+	qDir  = flag.String("q", "q", "the queue dir")
 	sleep = flag.Int("sleep", -1, "in seconds")
 )
 
@@ -30,22 +32,38 @@ func main() {
 		glog.Fatal(err)
 	}
 
-	glog.Infof("start crawling from %s", p.ExampleUrl)
+	q, err := ds.OpenQueue(*qDir)
+	if err != nil {
+		glog.Fatal(err)
+	}
+	defer q.Close()
 
-	var tasks = []*et.UrlTask{&et.UrlTask{ParserName: *start, Url: p.ExampleUrl}}
+	glog.Infof("start crawling from %s", p.ExampleUrl)
+	q.EnqueueObject(&et.UrlTask{ParserName: *start, Url: p.ExampleUrl})
+
+	var task = new(et.UrlTask)
 	for {
-		if len(tasks) == 0 {
+		if q.Length() == 0 {
 			break
 		}
-		task := tasks[0]
-		tasks = tasks[1:]
+
+		item, err := q.Dequeue()
+		if err != nil {
+			glog.Fatal(err)
+		}
+		if err = item.ToObject(task); err != nil {
+			glog.Fatal(err)
+		}
+
 		glog.Info(task.Url)
 		new_tasks, items, err := ParseTask(task)
 		if err != nil {
 			glog.Error(err)
 			continue
 		}
-		tasks = append(tasks, new_tasks...)
+		for _, t := range new_tasks {
+			q.EnqueueObject(t)
+		}
 		for _, item := range items {
 			b, _ := json.Marshal(item)
 			fs.WriteLine(b)
