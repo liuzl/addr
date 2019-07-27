@@ -51,9 +51,47 @@ def city_names(name):
 county_suffix = ['新区', '矿区','区', '县', '市', '现代产业园', '行政委员会', '管委会']
 def county_names(name):
     if len(name) <= 2: return [name] # 赵县
+    s = '高新技术产业开发区'
+    if name.endswith(s):
+        x = name[:-len(s)].rstrip('市')
+        if len(x) <= 3 or x == '乌鲁木齐':
+            return [name, s, '高新区']
+        if x == '河北衡水':
+            return [name, s, '高新区']
+        if x == '包头稀土':
+            return [name, '稀土'+s, '稀土高新区']
+        if x == '长春净月':
+            return [name, '净月'+s, '净月高新区', '净月']
+        if x == '泰州医药':
+            return [name, '医药'+s, '医药高新区']
+        if x == '合肥新站':
+            return [name, '新站'+s, '新站高新区']
+        return [name]
+
+    s = '高新技术产业园区'
+    if name.endswith(s):
+        return [name, s, '高新区']
+
+    s = '工业园区'
+    if name.endswith(s):
+        if name == '呼和浩特金海工业园区':
+            return [name, '金海工业园区', '金海', s, '工业园']
+        if name =='格尔木藏青工业园区':
+            return [name, '藏青工业园区', '藏青', s, '工业园']
+        return [name, s, '工业园']
+    
+    if name == '石家庄循环化工园区':
+        return [name, '循环化工园', '化工园']
+    
+    ss = ['经济技术开发区','经济开发区']
+    for s in ss:
+        if name.endswith(s):
+            return [name, s, '开发区']
+    
     if name.endswith('自治县'):
         x = name[:-3]
-        for i in nations: x = x.replace(i,"")
+        for i in nations:
+            x = x.replace(i,"")
         if len(x) == 0: return [name]
         ret = [name,x+"自治县",x+"县",x]
         return ret    
