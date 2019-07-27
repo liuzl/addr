@@ -149,21 +149,22 @@ def village_names(name):
         if name.endswith(s):
             x = name[:-len(s)]
             if x.endswith('村'):
-                return [name, x, x.rstrip('村')]
+                if len(x)>2: return [name, x, x.rstrip('村')]
+                return [name, x]
             else:
                 return [name, x+'村', x]
-
+    ss = ["生活区","工作区","工业园","工业区","虚拟社区"]
+    for s in ss:
+        if name.endswith(s):
+            x = name[:-len(s)]
+            return [name, x]
+        
     ss = ["社区居委会","社区居民委员会","居民委员会","居委会","社区","社区委员会","社区居委","社区居民委会"]
     for s in ss:
         if name.endswith(s):
             x = name[:-len(s)]
             return [name, x+'社区', x+"小区", x]
 
-    ss = ["生活区","工作区","工业园","工业区"]
-    for s in ss:
-        if name.endswith(s):
-            x = name[:-len(s)]
-            return [name, x]
     return [name]
 
 def names(f, name):
@@ -172,4 +173,4 @@ def names(f, name):
 if __name__ == "__main__":
     for line in open("addr.txt"):
         item = line.strip().split("\t")
-        print("%s\t%s\t%s"%(item[0],item[1],names(item[0], item[2])))
+        print("%s\t%s"%(item[1],','.join(names(item[0], item[2]))))
