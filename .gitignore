@@ -16,3 +16,4 @@ first.lock
 tld.cache
 
 .ipynb_checkpoints/
+*.txt
