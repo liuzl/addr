@@ -26,4 +26,8 @@ def main(f):
         elif cls == "town": x(item, 'village')
 
 if __name__ == "__main__":
-    main("../20190721000000.dat")
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: %s <file>" % sys.argv[0])
+        sys.exit(0)
+    main(sys.argv[1])
