@@ -47,10 +47,11 @@ def city_names(name):
         return [name, name.rstrip("地区")]
     return [name]
 
-# TODO: 高新技术产业开发区
 county_suffix = ['新区', '矿区','区', '县', '市', '现代产业园', '行政委员会', '管委会']
+cnames = set(['市辖区'])
 def county_names(name):
-    if len(name) <= 2: return [name] # 赵县
+    if len(name) <= 2 or name in cnames:
+        return [name] # 赵县
     s = '高新技术产业开发区'
     if name.endswith(s):
         x = name[:-len(s)].rstrip('市')
