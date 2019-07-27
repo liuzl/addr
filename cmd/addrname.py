@@ -1,5 +1,15 @@
 # -*- encoding: utf-8 -*-
 
+def nations_():
+    for line in open("chinese_nations.txt"):
+        line = line.strip()
+        if len(line) > 2:
+            yield line[:-1]
+        yield line
+
+nations = list(nations_())
+nations.sort(reverse=True)
+
 def province_names(name):
     if name.endswith('市'):
         return [name, name.rstrip('市')]
@@ -15,13 +25,9 @@ def province_names(name):
         return [name,'新疆维吾尔族自治区', '新疆自治区', '新疆省', '新疆']
     return [name]
 
-zu = ["朝鲜族","土家族","藏族","羌族","彝族","布依族","苗族","侗族",
-"哈尼族","壮族","傣族","白族","景颇族","傈僳族","回族","蒙古族",
-"蒙古","哈萨克","柯尔克孜",]
 def _zhou(name):
     x = name.rstrip('自治州')
-    for i in zu:
-        x = x.replace(i,"")
+    for i in nations: x = x.replace(i,"")
     ret = [name,x+"自治州",x+"州",x+"市",x]
     if name == '克孜勒苏柯尔克孜自治州': ret.append("克州")
     elif name == '巴音郭楞蒙古自治州': ret.append("巴州")
@@ -41,10 +47,16 @@ def city_names(name):
         return [name, name.rstrip("地区")]
     return [name]
 
-
-county_suffix = ['新区', '矿区', '区', '县', '市', '现代产业园', '行政委员会', '管委会']
+# TODO: 高新技术产业开发区
+county_suffix = ['新区', '矿区','区', '县', '市', '现代产业园', '行政委员会', '管委会']
 def county_names(name):
     if len(name) <= 2: return [name] # 赵县
+    if name.endswith('自治县'):
+        x = name[:-3]
+        for i in nations: x = x.replace(i,"")
+        if len(x) == 0: return [name]
+        ret = [name,x+"自治县",x+"县",x]
+        return ret    
     for suffix in county_suffix:
         if name.endswith(suffix):
             return [name, name[:-len(suffix)]]
