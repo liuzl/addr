@@ -3,7 +3,7 @@ import json
 def province(item):
     for p in item['province']:
         pos = p['province'].rfind('/') + 1
-        print("%s\t%s\t%s" % ('province',
+        print("%s\t%s" % (
             p['province'][pos:].replace('.html',''),
             p['name']))
 
@@ -14,9 +14,9 @@ def x(item, name):
     elif name == "town": p = 9
     if type(item[name]) is list:
         for c in item[name]:
-            print("%s\t%s\t%s" % (name, c['code'][:p], c['name']))
+            print("%s\t%s" % (c['code'][:p], c['name']))
     else:
-        print("%s\t%s\t%s" % (name, item[name]['code'][:p], item[name]['name']))
+        print("%s\t%s" % (item[name]['code'][:p], item[name]['name']))
 
 def main(f):
     for line in open(f):

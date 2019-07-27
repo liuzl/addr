@@ -170,7 +170,9 @@ def village_names(name):
 def names(f, name):
     return globals().get('%s_names' % f)(name)
 
+lenmap = {2:"province",4:"city",6:"county",9:"town",12:"village"}
+
 if __name__ == "__main__":
     for line in open("addr.txt"):
         item = line.strip().split("\t")
-        print("%s\t%s"%(item[1],','.join(names(item[0], item[2]))))
+        print("%s\t%s"%(item[0],','.join(names(lenmap[len(item[0])], item[1]))))
