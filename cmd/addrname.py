@@ -48,7 +48,7 @@ def city_names(name):
     return [name]
 
 county_suffix = ['新区', '矿区','区', '县', '市', '现代产业园', '行政委员会', '管委会']
-cnames = set(['市辖区'])
+cnames = set(['市辖区', '山西转型综合改革示范区'])
 def county_names(name):
     if len(name) <= 2 or name in cnames:
         return [name] # 赵县
@@ -83,6 +83,30 @@ def county_names(name):
     
     if name == '石家庄循环化工园区':
         return [name, '循环化工园', '化工园']
+    
+    s = '管理区'
+    if name.endswith(s):
+        x = name[:-len(s)]
+        if len(x) <= 3:
+            return [name, x]
+        x = x[x.find('市')+1:]
+        return [name,x]
+    
+    s = '城乡一体化示范区'
+    if name.endswith(s):
+        return [name, '示范区']
+    
+    if name == '云龙示范区':
+        return [name, '云龙', '示范区']
+    if name == '湘潭昭山示范区':
+        return [name, '昭山示范区', '昭山']
+    if name == '湘潭九华示范区':
+        return [name, '九华示范区', '九华']
+
+    if name == '邯郸冀南新区':
+        return [name, '冀南']
+    if name == '五台山风景名胜区':
+        return [name, '五台山']
     
     ss = ['经济技术开发区','经济开发区']
     for s in ss:
