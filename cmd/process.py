@@ -4,15 +4,19 @@ def province(item):
     for p in item['province']:
         pos = p['province'].rfind('/') + 1
         print("%s\t%s\t%s" % ('province',
-            p['province'][pos:].replace('.html','')+('0'*10),
+            p['province'][pos:].replace('.html',''),
             p['name']))
 
 def x(item, name):
+    p = 12
+    if name == "city": p = 4
+    elif name == "county": p = 6
+    elif name == "town": p = 9
     if type(item[name]) is list:
         for c in item[name]:
-            print("%s\t%s\t%s" % (name, c['code'], c['name']))
+            print("%s\t%s\t%s" % (name, c['code'][:p], c['name']))
     else:
-        print("%s\t%s\t%s" % (name, item[name]['code'], item[name]['name']))
+        print("%s\t%s\t%s" % (name, item[name]['code'][:p], item[name]['name']))
 
 def main(f):
     for line in open(f):
