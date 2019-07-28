@@ -12,9 +12,9 @@ nations.sort(reverse=True)
 
 def province_names(name):
     if name.endswith('市'):
-        return [name, name.rstrip('市')]
+        return [name, name[:-1]]
     elif name.endswith('省'):
-        return [name, name.rstrip('省')]
+        return [name, name[:-1]]
     elif name == '内蒙古自治区':
         return [name, '内蒙古省', '内蒙古', '内蒙']
     elif name == '广西壮族自治区':
@@ -26,7 +26,7 @@ def province_names(name):
     return [name]
 
 def _zhou(name):
-    x = name.rstrip('自治州')
+    x = name[:-3]
     for i in nations: x = x.replace(i,"")
     ret = [name,x+"自治州",x+"州",x+"市",x]
     if name == '克孜勒苏柯尔克孜自治州': ret.append("克州")
@@ -36,15 +36,15 @@ def _zhou(name):
 
 def city_names(name):
     if name.endswith('市'):
-        ret = [name, name.rstrip('市')]
+        ret = [name, name[:-1]]
         if name == '呼和浩特市': ret.append('呼市')
         return ret
     elif name.endswith('盟'):
-        return [name, name.rstrip('盟')]
+        return [name, name[:-1]]
     elif name.endswith("自治州"):
         return _zhou(name)
     elif name.endswith("地区"):
-        return [name, name.rstrip("地区")]
+        return [name, name[:-2]]
     return [name]
 
 county_suffix = ['新区', '矿区','区', '县', '市', '现代产业园', '行政委员会', '管委会']
@@ -151,8 +151,9 @@ def village_names(name):
     for s in ss:
         if name.endswith(s):
             x = name[:-len(s)]
+            if len(x) < 2: return [name]
             if x.endswith('村'):
-                if len(x)>2: return [name, x, x.rstrip('村')]
+                if len(x)>2: return [name, x, x[:-1]]
                 return [name, x]
             else:
                 return [name, x+'村', x]
