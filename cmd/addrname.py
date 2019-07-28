@@ -140,7 +140,10 @@ town_suffix = ['镇', '乡', '街道办事处', '街道', '地区办事处']
 def town_names(name):
     for suffix in town_suffix:
         if name.endswith(suffix):
-            return [name, name[:-len(suffix)]]
+            x = name[:-len(suffix)]
+            if len(x) > 1
+                return [name, x]
+            return [name,]
     return [name]
 
 def village_names(name):
@@ -157,13 +160,17 @@ def village_names(name):
     for s in ss:
         if name.endswith(s):
             x = name[:-len(s)]
-            return [name, x]
+            if len(x) > 1:
+                return [name, x]
+            return [name]
         
     ss = ["社区居委会","社区居民委员会","居民委员会","居委会","社区","社区委员会","社区居委","社区居民委会"]
     for s in ss:
         if name.endswith(s):
             x = name[:-len(s)]
-            return [name, x+'社区', x+"小区", x]
+            if len(x) > 1:
+                return [name, x+'社区', x+"小区", x]
+            return [name, x+'社区', x+"小区"]
 
     return [name]
 
