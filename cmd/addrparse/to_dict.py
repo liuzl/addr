@@ -15,13 +15,15 @@ def process(f, ofile):
             data[key]["loc"].append(item[0])
     out = open(ofile, "w")
     max_cnt = 0
+    key = ''
     for k, v in data.items():
         one = json.dumps({"k": k, "v": v}, ensure_ascii=False)
         out.write(one+"\n")
         if len(v['loc']) > max_cnt:
             max_cnt = len(v['loc'])
+            key = k
     out.close()
-    print("max_cnt: %d" % max_cnt)
+    print("%s: %d" % (key, max_cnt))
 
 if __name__ == "__main__":
     import sys
