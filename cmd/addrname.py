@@ -141,7 +141,7 @@ def town_names(name):
     for suffix in town_suffix:
         if name.endswith(suffix):
             x = name[:-len(suffix)]
-            if len(x) > 1
+            if len(x) > 1:
                 return [name, x]
             return [name,]
     return [name]
