@@ -9,7 +9,7 @@ def process(text):
     if item['status'] != 'OK': return item['status']
     msg = item['message']
     for k, v in msg.items():
-        print(k,v['value'])
+        print(k,v)
 
 if __name__ == "__main__":
     import sys
