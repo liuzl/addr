@@ -5,6 +5,12 @@ import gzip
 url = "http://localhost:8080/loc/multimaxmatch"
 code_url = "http://127.0.0.1:5000/?code=%s"
 
+def code2name(code):
+    text = requests.get(code_url % code).text
+    item = json.loads(text)
+    if item['status'] == 'ok': return item['message']
+    return ''
+
 def process(text):
     ret = requests.get(url, params={"text": text})
     item = json.loads(ret.text)
@@ -19,8 +25,8 @@ def process(text):
             addr[addr_type].append({"code":value, "name":k, "pos":v['hits']})
     print(addr)
     if "province" in addr:
-        text = requests.get(code_url % addr['province'][0]['code'][0]).text
-        print(json.loads(text))
+        text = code2name(addr['province'][0]['code'][0])
+        print(text)
 
 if __name__ == "__main__":
     import sys
