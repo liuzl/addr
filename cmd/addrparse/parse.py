@@ -41,19 +41,23 @@ def process(text):
     for key in rkeys:
         for x in addr[key]:
             for code in x['code']:
-                if check(code, key, addr):
+                if check(code,x['pos'], key, addr):
                     result.append((key,code))
     print(result)
 
-def check(code, key, addr):
+def check(code, pos, key, addr):
     for k in keys:
         if k == key: break
-        if len(addr[k]) == 0: continue
+        cnt = 0
+        for x in addr[k]:
+            if pos != x['pos']: cnt += 1
+        if cnt == 0: continue
 
         # 每个层级都需要对应
         ok = False
         prefix = code[:codelens[k]]
         for x in addr[k]:
+            if pos == x['pos']: continue
             for c in x['code']:
                 if prefix == c:
                     ok = True
