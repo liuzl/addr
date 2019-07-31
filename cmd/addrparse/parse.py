@@ -28,22 +28,38 @@ def process(text):
                 addr[key].append({"code":value, "name":k, "pos":hit})
     for k, v in addr.items():
         print(k, v)
-    '''
-    if "province" in addr:
-        text = code2name(addr['province'][0]['code'][0])
-        print(text)
-    '''
     result = []
-    '''
-    for key in rkeys:
-        if addr[key]: break
-    '''
     for key in rkeys:
         for x in addr[key]:
             for code in x['code']:
                 if check(code,x['pos'], key, addr):
                     result.append((key,code))
     print(result)
+
+def process2(text):
+    ret = requests.get(url, params={"text": text})
+    item = json.loads(ret.text)
+    if item['status'] != 'OK': return item['status']
+    msg = item['message']
+    addr = []
+    for k, v in msg.items():
+        for hit in v['hits']:
+            addr.append({"value":v['value'], "name":k, "pos":hit})
+    addr.sort(key=lambda x:x['pos']['start'])
+    num = len(addr)
+
+    for i in range(num):
+        result = []
+        start = addr[i]['pos']['start']
+        end = addr[i]['pos']['end']
+        for key in keys:
+            if key in addr[i]['value']:
+                result.append((addr[i]['name'], addr[i]['value'][key], key, start, end))
+                break
+        for j in range(i+1, num):
+            end = addr[j]['pos']['end']
+            #TODO
+        print(result)
 
 def check(code, pos, key, addr):
     for k in keys:
@@ -71,5 +87,5 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python %s <text>" % sys.argv[0])
         sys.exit(1)
-    ret = process(sys.argv[1])
+    ret = process2(sys.argv[1])
     print(ret)
