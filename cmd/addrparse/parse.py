@@ -15,7 +15,7 @@ def code2name(code):
     if item['status'] == 'ok': return item['message']
     return ''
 
-def addr(code):
+def addr_object(code):
     ret = {}
     l = len(code)
     for key in keys:
@@ -44,7 +44,8 @@ def process(text):
         end = addr[i]['pos']['end']
         for key in keys:
             if key in addr[i]['value']:
-                item = (key, addr[i]['value'][key], start, end, addr[i]['name'], end-start)
+                item = [key, addr[i]['value'][key], start, end,
+                        addr[i]['name'], end-start]
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
@@ -68,9 +69,11 @@ def process(text):
                         if not ok: break
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
-                        item = (k, code, start, end, txt, end-start)
+                        item = [k, code, start, end, txt, end-start]
         if item[3] > last_end:
             last_end = item[3]
+            if type(item[1]) is list: item.append([addr_object(x) for x in item[1]])
+            else: item.append(addr_object(item[1]))
             result.append(item)
     result.sort(key=lambda x:x[5], reverse=True)
     return result
@@ -82,7 +85,4 @@ if __name__ == "__main__":
         sys.exit(1)
     ret = process(sys.argv[1])
     for item in ret:
-        if type(item[1]) is str:
-            print(item[4], "=>", addr(item[1]))
-        elif type(item[1]) is list:
-            print(item, "=>", [addr(x) for x in item[1]] )
+        print(item)
