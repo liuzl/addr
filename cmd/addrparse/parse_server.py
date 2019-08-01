@@ -10,14 +10,15 @@ def load_dict():
     global kv
     for line in gzip.open("2018_addr_dict.txt.gz", "rt"):
         item = line.strip().split("\t")
-        kv[item[0]] = item[1].split(",")[0]
+        #kv[item[0]] = item[1].split(",")[0]
+        kv[item[0]] = item[1].split(",")
 
 load_dict()
 
 def code2name(code):
     global kv
     if code not in kv: return ''
-    return kv[code]
+    return kv[code][0]
 
 url = "http://localhost:8080/loc/multimaxmatch"
 
@@ -99,6 +100,16 @@ def get():
         return Response(json.dumps({'status':"error", 'message':"empty input"}))
     result = process(r)
     return Response(json.dumps({'status':"ok", 'message':result}))
+
+@app.route("/code")
+def get_code():
+    r = request.args.get('code', '')
+    if r == "":
+        return Response(json.dumps({'status':"error", 'message':"empty input"}))
+    global kv
+    if r not in kv:
+        return Response(json.dumps({'status':"error", 'message':"%s not found" % r}))
+    return Response(json.dumps({'status':"ok", 'message':kv[r]}))
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5001, debug=True)
