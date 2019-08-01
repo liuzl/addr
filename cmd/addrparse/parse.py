@@ -82,4 +82,7 @@ if __name__ == "__main__":
         sys.exit(1)
     ret = process(sys.argv[1])
     for item in ret:
-        print(item[4], "=>", addr(item[1]))
+        if type(item[1]) is str:
+            print(item[4], "=>", addr(item[1]))
+        elif type(item[1]) is list:
+            print(item, "=>", [addr(x) for x in item[1]] )
