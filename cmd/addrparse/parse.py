@@ -21,26 +21,6 @@ def process(text):
     item = json.loads(ret.text)
     if item['status'] != 'OK': return item['status']
     msg = item['message']
-    addr = {key:[] for key in keys}
-    for k, v in msg.items():
-        for key, value in v['value'].items():
-            for hit in v['hits']:
-                addr[key].append({"code":value, "name":k, "pos":hit})
-    for k, v in addr.items():
-        print(k, v)
-    result = []
-    for key in rkeys:
-        for x in addr[key]:
-            for code in x['code']:
-                if check(code,x['pos'], key, addr):
-                    result.append((key,code))
-    print(result)
-
-def process2(text):
-    ret = requests.get(url, params={"text": text})
-    item = json.loads(ret.text)
-    if item['status'] != 'OK': return item['status']
-    msg = item['message']
     addr = []
     for k, v in msg.items():
         for hit in v['hits']:
@@ -81,31 +61,10 @@ def process2(text):
         result.append(item)
     return result
 
-def check(code, pos, key, addr):
-    for k in keys:
-        if k == key: break
-        cnt = 0
-        for x in addr[k]:
-            if pos != x['pos']: cnt += 1
-        if cnt == 0: continue
-
-        # 每个层级都需要对应
-        ok = False
-        prefix = code[:codelens[k]]
-        for x in addr[k]:
-            if pos == x['pos']: continue
-            for c in x['code']:
-                if prefix == c:
-                    ok = True
-                    break
-            if ok: break
-        if not ok: return False
-    return True
-
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
         print("Usage: python %s <text>" % sys.argv[0])
         sys.exit(1)
-    ret = process2(sys.argv[1])
+    ret = process(sys.argv[1])
     print(ret)
