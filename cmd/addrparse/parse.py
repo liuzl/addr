@@ -15,6 +15,17 @@ def code2name(code):
     if item['status'] == 'ok': return item['message']
     return ''
 
+def addr(code):
+    ret = {}
+    l = len(code)
+    for key in keys:
+        if codelens[key] > l: break
+        name = code2name(code[:codelens[key]])
+        if name == '':
+            break
+        ret[key] = name
+    return ret
+
 def process(text):
     ret = requests.get(url, params={"text": text})
     item = json.loads(ret.text)
@@ -70,4 +81,5 @@ if __name__ == "__main__":
         print("Usage: python %s <text>" % sys.argv[0])
         sys.exit(1)
     ret = process(sys.argv[1])
-    print(ret)
+    for item in ret:
+        print(item[4], "=>", addr(item[1]))
