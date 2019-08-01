@@ -136,7 +136,7 @@ def county_names(name):
         return [name, '中沙群岛', '中沙']
     return [name]
 
-town_suffix = ['镇', '乡', '街道办事处', '街道', '地区办事处']
+town_suffix = ['镇', '乡', '街道',]
 def town_names(name):
     for suffix in town_suffix:
         if name.endswith(suffix):
@@ -144,6 +144,18 @@ def town_names(name):
             if len(x) > 1:
                 return [name, x]
             return [name,]
+    if name.endswith('地区办事处'):
+        x = name[:-len('地区办事处')]
+        if len(x) > 1:
+            return [name, x+"地区", x]
+        else:
+            return [name, x+"地区"]
+    if name.endswith('街道办事处'):
+        x = name[:-len('街道办事处')]
+        if len(x) > 1:
+            return [name, x+"街道", x]
+        else:
+            return [name, x+"街道"]
     return [name]
 
 def village_names(name):
