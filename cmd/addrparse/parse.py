@@ -61,8 +61,8 @@ def process2(text):
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
-            #TODO
             for k, v in addr[j]['value'].items():
+                if codelens[k] <= codelens[key]: continue
                 for code in v:
                     ok = False
                     for l in range(i, j):
@@ -80,7 +80,7 @@ def process2(text):
                         if check_cnt == 0: ok = True
                         if not ok: break
                     if ok:
-                        result.append(code)
+                        result.append((k, code, start, end))
         print(result)
 
 def check(code, pos, key, addr):
