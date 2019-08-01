@@ -48,6 +48,9 @@ def process2(text):
     addr.sort(key=lambda x:x['pos']['start'])
     num = len(addr)
 
+    for i in addr:
+        print(i)
+
     for i in range(num):
         result = []
         start = addr[i]['pos']['start']
@@ -59,6 +62,25 @@ def process2(text):
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
             #TODO
+            for k, v in addr[j]['value'].items():
+                for code in v:
+                    ok = False
+                    for l in range(i, j):
+                        ok = False
+                        check_cnt = 0
+                        for kk, vv in addr[l]['value'].items():
+                            if codelens[kk] >= codelens[k]: continue
+                            check_cnt += 1
+                            prefix = code[:codelens[kk]]
+                            for xcode in vv:
+                                if xcode == prefix:
+                                    ok = True
+                                    break
+                            if ok: break
+                        if check_cnt == 0: ok = True
+                        if not ok: break
+                    if ok:
+                        result.append(code)
         print(result)
 
 def check(code, pos, key, addr):
