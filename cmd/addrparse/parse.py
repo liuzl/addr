@@ -47,17 +47,13 @@ def process2(text):
             addr.append({"value":v['value'], "name":k, "pos":hit})
     addr.sort(key=lambda x:x['pos']['start'])
     num = len(addr)
-
-    for i in addr:
-        print(i)
-
+    result = []
     for i in range(num):
-        result = []
         start = addr[i]['pos']['start']
         end = addr[i]['pos']['end']
         for key in keys:
             if key in addr[i]['value']:
-                result.append((addr[i]['name'], addr[i]['value'][key], key, start, end))
+                item = (addr[i]['name'], addr[i]['value'][key], key, start, end)
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
@@ -80,8 +76,10 @@ def process2(text):
                         if check_cnt == 0: ok = True
                         if not ok: break
                     if ok:
-                        result.append((k, code, start, end))
-        print(result)
+                        txt = text.encode('utf-8')[start:end].decode('utf-8')
+                        item = (k, code, start, end, txt)
+        result.append(item)
+    return result
 
 def check(code, pos, key, addr):
     for k in keys:
