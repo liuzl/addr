@@ -49,7 +49,10 @@ def process(text):
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
-            for k, v in addr[j]['value'].items():
+            #for k, v in addr[j]['value'].items():
+            for k in rkeys:
+                if k not in addr[j]['value']: continue
+                v = addr[j]['value'][k]
                 if codelens[k] <= codelens[key]: continue
                 for code in v:
                     ok = False
