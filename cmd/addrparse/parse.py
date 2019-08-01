@@ -9,7 +9,6 @@ keys = ["province","city","county","town","village",]
 rkeys = list(reversed(keys))
 codelens = {"province":2,"city":4,"county":6,"town":9,"village":12,}
 
-
 def code2name(code):
     text = requests.get(code_url % code).text
     item = json.loads(text)
@@ -28,12 +27,13 @@ def process(text):
     addr.sort(key=lambda x:x['pos']['start'])
     num = len(addr)
     result = []
+    last_end = 0
     for i in range(num):
         start = addr[i]['pos']['start']
         end = addr[i]['pos']['end']
         for key in keys:
             if key in addr[i]['value']:
-                item = (addr[i]['name'], addr[i]['value'][key], key, start, end)
+                item = (key, addr[i]['value'][key], start, end, addr[i]['name'], end-start)
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
@@ -57,8 +57,11 @@ def process(text):
                         if not ok: break
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
-                        item = (k, code, start, end, txt)
-        result.append(item)
+                        item = (k, code, start, end, txt, end-start)
+        if item[3] > last_end:
+            last_end = item[3]
+            result.append(item)
+    result.sort(key=lambda x:x[5], reverse=True)
     return result
 
 if __name__ == "__main__":
