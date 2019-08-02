@@ -53,7 +53,7 @@ function visual(doc) {
             if (k2 == "address") {
                 var x = "";
                 for (var j = 0; j < vv.length; j++) {
-                    var kj = "address " + (j+1);
+                    var kj = "item " + (j+1);
                     var vj = "";
                     for (k3 in vv[j]) {
                         vj += one(k3, vv[j][k3]);
