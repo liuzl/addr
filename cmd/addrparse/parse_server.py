@@ -94,7 +94,7 @@ def process(text):
             #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
             #else: item['addr'] = addr_object(item['code'])
             for x in item['address']:
-                x['value'] = addr_object(x['code'])
+                x.update(addr_object(x['code']))
             result.append(item)
     result.sort(key=lambda x:x['length'], reverse=True)
     return result
