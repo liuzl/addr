@@ -55,7 +55,8 @@ def process(text):
         end = addr[i]['pos']['end']
         for key in keys:
             if key in addr[i]['value']:
-                item = {"level": key, "code": addr[i]['value'][key],
+                item = {"level": key,
+                        "address": [{"code": x} for x in addr[i]['value'][key]],
                         "start": start, "end": end, "text": addr[i]['name'],
                         "length": end-start}
                 break
@@ -85,12 +86,15 @@ def process(text):
                         if not ok: break
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
-                        item = {"level": k, "code": code, "start": start, "end": end,
+                        item = {"level": k, "address": [{"code": code}],
+                                "start": start, "end": end,
                                 "text": txt, "length": end-start}
         if item['end'] > last_end:
             last_end = item['end']
-            if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
-            else: item['addr'] = addr_object(item['code'])
+            #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
+            #else: item['addr'] = addr_object(item['code'])
+            for x in item['address']:
+                x['value'] = addr_object(x['code'])
             result.append(item)
     result.sort(key=lambda x:x['length'], reverse=True)
     return result
