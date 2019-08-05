@@ -92,7 +92,7 @@ def process(text):
                             item = {"level": k, "address": [{"code": code}],
                                     "start": start, "end": end,
                                     "text": txt, "length": end-start}
-                        key = k
+                        #key = k
         if item['end'] > last_end:
             last_end = item['end']
             #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
