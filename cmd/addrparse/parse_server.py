@@ -86,11 +86,13 @@ def process(text):
                         if not ok: break
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
-                        item = {"level": k, "address": [{"code": code}],
-                                "start": start, "end": end,
-                                "text": txt, "length": end-start}
+                        if item and item['level'] == k:
+                            item['address'].append({"code": code})
+                        else:
+                            item = {"level": k, "address": [{"code": code}],
+                                    "start": start, "end": end,
+                                    "text": txt, "length": end-start}
                         key = k
-                        break
         if item['end'] > last_end:
             last_end = item['end']
             #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
