@@ -109,7 +109,7 @@ def get():
     if r == "":
         return Response(json.dumps({'status':"error", 'message':"empty input"}))
     result = process(r)
-    return Response(json.dumps({'status':"ok", 'message':result}),
+    return Response(json.dumps({'status':"ok", 'message':result}, ensure_ascii=False),
             mimetype="application/json")
 
 @app.route("/code")
@@ -120,7 +120,7 @@ def get_code():
     global kv
     if r not in kv:
         return Response(json.dumps({'status':"error", 'message':"%s not found" % r}))
-    return Response(json.dumps({'status':"ok", 'message':kv[r]}))
+    return Response(json.dumps({'status':"ok", 'message':kv[r]}, ensure_ascii=False))
 
 @app.route('/')
 def index():
