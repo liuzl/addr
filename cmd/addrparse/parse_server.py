@@ -63,12 +63,11 @@ def process(text):
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
-            #for k, v in addr[j]['value'].items():
             for k in rkeys:
+                if codelens[k] <= codelens[key]: continue
                 if k not in addr[j]['value']: continue
                 v = addr[j]['value'][k]
-
-                if codelens[k] <= codelens[key]: continue
+                #print(key, j, k, v)
                 for code in v:
                     ok = False
                     for l in range(i, j):
@@ -90,6 +89,8 @@ def process(text):
                         item = {"level": k, "address": [{"code": code}],
                                 "start": start, "end": end,
                                 "text": txt, "length": end-start}
+                        key = k
+                        break
         if item['end'] > last_end:
             last_end = item['end']
             #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
