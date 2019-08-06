@@ -11,7 +11,6 @@ def load_dict():
     global kv
     for line in gzip.open("2018_addr_dict.txt.gz", "rt"):
         item = line.strip().split("\t")
-        #kv[item[0]] = item[1].split(",")[0]
         kv[item[0]] = item[1].split(",")
 
 load_dict()
@@ -67,7 +66,6 @@ def process(text):
                 if codelens[k] <= codelens[key]: continue
                 if k not in addr[j]['value']: continue
                 v = addr[j]['value'][k]
-                #print(key, j, k, v)
                 for code in v:
                     ok = False
                     for l in range(i, j):
@@ -87,6 +85,7 @@ def process(text):
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
                         if item and item['level'] == k:
+                            if item['end'] < end: break
                             item['address'].append({"code": code})
                         else:
                             item = {"level": k, "address": [{"code": code}],
@@ -95,8 +94,6 @@ def process(text):
                         #key = k
         if item['end'] > last_end:
             last_end = item['end']
-            #if type(item['code']) is list: item['addr'] = [addr_object(x) for x in item['code']]
-            #else: item['addr'] = addr_object(item['code'])
             for x in item['address']:
                 x.update(addr_object(x['code']))
             result.append(item)
