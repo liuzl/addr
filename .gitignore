@@ -17,3 +17,5 @@ tld.cache
 
 .ipynb_checkpoints/
 *.txt
+
+.DS_Store
