@@ -193,6 +193,13 @@ def names(f, name):
 lenmap = {2:"province",4:"city",6:"county",9:"town",12:"village"}
 
 if __name__ == "__main__":
-    for line in open("addr.txt"):
+    import gzip
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python %s <infile>" % sys.argv[0])
+        sys.exit(1)
+    if sys.argv[1].endswith(".gz"): fp = gzip.open(sys.argv[1], 'rt')
+    else: fp = open(sys.argv[1], 'rt')
+    for line in fp:
         item = line.strip().split("\t")
         print("%s\t%s"%(item[0],','.join(names(lenmap[len(item[0])], item[1]))))
