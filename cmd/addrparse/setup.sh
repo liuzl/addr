@@ -8,3 +8,8 @@ then
     python addrname.py 2018_addr.tsv.gz > 2018_addr_dict.txt
     gzip 2018_addr_dict.txt
 fi
+
+if [ ! -f village.csv ];
+then
+    python to_dict.py 2018_addr_dict.txt.gz
+fi
