@@ -44,16 +44,17 @@ def process(text):
         end = addr[i]['pos']['end']
         for key in keys:
             if key in addr[i]['value']:
-                item = [key, addr[i]['value'][key], start, end,
-                        addr[i]['name'], end-start]
+                item = {"level": key,
+                        "address": [{"code": x} for x in addr[i]['value'][key]],
+                        "start": start, "end": end, "text": addr[i]['name'],
+                        "length": end-start}
                 break
         for j in range(i+1, num):
             end = addr[j]['pos']['end']
-            #for k, v in addr[j]['value'].items():
             for k in rkeys:
+                if codelens[k] <= codelens[key]: continue
                 if k not in addr[j]['value']: continue
                 v = addr[j]['value'][k]
-                if codelens[k] <= codelens[key]: continue
                 for code in v:
                     ok = False
                     for l in range(i, j):
@@ -72,14 +73,22 @@ def process(text):
                         if not ok: break
                     if ok:
                         txt = text.encode('utf-8')[start:end].decode('utf-8')
-                        item = [k, code, start, end, txt, end-start]
-        if item[3] > last_end:
-            last_end = item[3]
-            if type(item[1]) is list: item.append([addr_object(x) for x in item[1]])
-            else: item.append(addr_object(item[1]))
+                        if item and item['level'] == k:
+                            if item['end'] < end: break
+                            item['address'].append({"code": code})
+                        else:
+                            item = {"level": k, "address": [{"code": code}],
+                                    "start": start, "end": end,
+                                    "text": txt, "length": end-start}
+                        #key = k
+        if item['end'] > last_end:
+            last_end = item['end']
+            for x in item['address']:
+                x.update(addr_object(x['code']))
             result.append(item)
-    result.sort(key=lambda x:x[5], reverse=True)
+    result.sort(key=lambda x:x['length'], reverse=True)
     return result
+
 
 if __name__ == "__main__":
     import sys
