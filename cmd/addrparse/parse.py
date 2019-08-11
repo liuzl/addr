@@ -97,4 +97,4 @@ if __name__ == "__main__":
         sys.exit(1)
     ret = process(sys.argv[1])
     for item in ret:
-        print(item)
+        print(json.dumps(item, ensure_ascii=False))
