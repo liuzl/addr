@@ -122,7 +122,9 @@ def county_names(name):
         return ret    
     for suffix in county_suffix:
         if name.endswith(suffix):
-            return [name, name[:-len(suffix)]]
+            x = name[:-len(suffix)]
+            if len(x) <= 1: continue
+            return [name, x]
     if name.endswith('自治旗'):
         x = name[:-len('自治旗')]
         return [name, x+'旗', x]
