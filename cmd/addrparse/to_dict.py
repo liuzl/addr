@@ -16,7 +16,7 @@ def process(infile):
         if f not in out: out[f] = open(f, "w")
         for key in item[1].split(','):
             key = key.strip()
-            if key == "": continue
+            if len(key) <= 1: continue
             out[f].write("%s,%s\n" % (key, item[0]))
     for k, v in out.items():
         v.close()
